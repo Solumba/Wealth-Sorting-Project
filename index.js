@@ -4,9 +4,9 @@ const showMillionaireButton = document.getElementById("show-millionaires");
 const sortButton = document.getElementById("sort");
 const calculateWealthButton = document.getElementById("calculate-wealth");
 
-const nameHolder = document.querySelector("#main h2");
-const netWorthHolder = document.querySelector("#main span");
 const mainElement = document.querySelector("#main");
+const totalWealthElem = document.querySelector("#total-wealth");
+console.log(totalWealthElem)
 
 let data = [];
 
@@ -23,12 +23,39 @@ const getRandomUser = async () => {
   addData(newUser);
 };
 
+//map method returns a new array
+
 const doubleMoney = () => {
     data = data.map((user) => {
        return {...user,  netWorth : user.netWorth * 2};
    });
 
    updateUsers();
+}
+
+// sort returns a new array and makes use of a compare function
+const sortWealth = () => {
+    data = data.sort((a, b) => {
+        return b.netWorth - a.netWorth;
+    })
+    updateUsers();
+}
+
+// filter returns a new array 
+
+const showMillionaires = () => {
+    data = data.filter((user) => {
+        return user.netWorth >= 1000000 && user.netWorth <= 999000000;
+    })
+    updateUsers();
+}
+
+//calculate total wealth
+const calculateTotalWealth = () => {
+    
+    let totalWealth = data.reduce((acc, user) => (
+        acc += user.netWorth), 0);
+        totalWealthElem.innerHTML = `Total Wealth &equals; ${formatMoneyAsDollar(totalWealth)}</div>`;
 }
 
 const addData = (obj) => {
@@ -54,6 +81,7 @@ const formatMoneyAsDollar = (number) => {
   return "$" + dollarUSLocale.format(number);
 };
 
+// to get 3 random users to start with
 getRandomUser();
 getRandomUser();
 getRandomUser();
@@ -63,3 +91,6 @@ getRandomUser();
 //Evebt Listeners
 addUserButton.addEventListener("click", getRandomUser);
 doubleButton.addEventListener('click', doubleMoney);
+sortButton.addEventListener('click', sortWealth);
+showMillionaireButton.addEventListener('click', showMillionaires);
+calculateWealthButton.addEventListener('click', calculateTotalWealth);
